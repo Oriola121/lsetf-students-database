@@ -132,7 +132,7 @@ export default function DataView() {
             </div>
 
             <div className="flex justify-center pt-6">
-              <img src={props.image} alt={props.name} className="w-36 h-36 rounded-full border-4 border-white" />
+              <img src={props.image} alt={props.name} className="w-36 h-36 rounded-full border-4 border-gradient-to-r from-sky-500 to-green-700" />
             </div>
             <div className="text-center mt-4 px-2">
               <h2 className="text-xl font-semibold">{props.name}</h2>
