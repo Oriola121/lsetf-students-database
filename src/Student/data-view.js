@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
-import { db } from './db';
+import { db } from './firebase';
 import AddStudentForm from './add-student';
 import { Pencil, Trash2, X } from 'lucide-react';
 
