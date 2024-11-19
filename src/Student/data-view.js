@@ -3,43 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
 import { db } from './firebase';
 import AddStudentForm from './add-student';
-import { Pencil, Trash2, X } from 'lucide-react';
-
-// Custom Alert Dialog Component
-const AlertDialog = ({ isOpen, onClose, onConfirm, title, description, confirmText, confirmStyle }) => {
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold">{title}</h3>
-          <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded-full">
-            <X size={20} />
-          </button>
-        </div>
-        <p className="text-gray-600 mb-6">{description}</p>
-        <div className="flex justify-end gap-3">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={() => {
-              onConfirm();
-              onClose();
-            }}
-            className={`px-4 py-2 rounded-md text-white ${confirmStyle}`}
-          >
-            {confirmText}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
+import { Pencil, Trash2 } from 'lucide-react';
+import AlertDialog from './alert-dialog';
 
 export default function DataView() {
   const [lsetf, setLsetf] = useState([]);
@@ -47,7 +12,6 @@ export default function DataView() {
   const [addNew, setAddNew] = useState(false);
   const [editStudent, setEditStudent] = useState(null);
   const [deleteDialog, setDeleteDialog] = useState({ isOpen: false, studentId: null });
-  const [editDialog, setEditDialog] = useState({ isOpen: false, student: null });
 
   const usersCollectionRef = collection(db, "students");
 
@@ -116,7 +80,7 @@ export default function DataView() {
 
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 p-6">
-      {/* Delete Confirmation Dialog */}
+      
       <AlertDialog
         isOpen={deleteDialog.isOpen}
         onClose={() => setDeleteDialog({ isOpen: false, studentId: null })}
@@ -127,34 +91,19 @@ export default function DataView() {
         confirmStyle="bg-red-500 hover:bg-red-600"
       />
 
-      {/* Edit Confirmation Dialog */}
-      <AlertDialog
-        isOpen={editDialog.isOpen}
-        onClose={() => setEditDialog({ isOpen: false, student: null })}
-        onConfirm={() => {
-          setEditStudent(editDialog.student);
-          setEditDialog({ isOpen: false, student: null });
-        }}
-        title="Update Student Information"
-        description="Are you sure you want to update this student's information? This action can be undone later."
-        confirmText="Continue"
-        confirmStyle="bg-blue-500 hover:bg-blue-600"
-      />
-
       <div className="text-center mb-12 animate__animated animate__fadeIn">
         <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-red-500 to-pink-600">
           Students Database
         </h1>
       </div>
 
-      {/* Search Section */}
       <div className="flex justify-center gap-4 mb-6">
         <input
           type="text"
           placeholder="Search by name..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="p-2 border border-gray-300 rounded-md text-gray-900"
+          className="p-2 border border-gray-300  shadow-sm rounded-md text-gray-900 focus:outline-none"
         />
         <button
           onClick={() => setAddNew(true)}
@@ -168,15 +117,12 @@ export default function DataView() {
         {filteredStudents.map((props, index) => (
           <div key={props.id} className="max-w-sm w-full bg-gradient-to-br from-white/60 via-white/40 to-white/30 shadow-xl rounded-lg overflow-hidden transition-transform transform hover:scale-105 hover:shadow-2xl">
             <div className="flex justify-end gap-2 p-2">
-              {/* Edit Button */}
               <button
-                onClick={() => setEditDialog({ isOpen: true, student: props })}
+                onClick={() => setEditStudent(props)}
                 className="p-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors"
               >
                 <Pencil size={16} />
               </button>
-
-              {/* Delete Button */}
               <button
                 onClick={() => setDeleteDialog({ isOpen: true, studentId: props.id })}
                 className="p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
@@ -185,6 +131,7 @@ export default function DataView() {
               </button>
             </div>
 
+            {/* Rest of the student card content remains the same */}
             <div className="flex justify-center pt-6">
               <img src={props.image} alt={props.name} className="w-36 h-36 rounded-full border-4 border-white" />
             </div>

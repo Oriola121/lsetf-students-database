@@ -1,12 +1,15 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import { X, Upload, Loader2 } from "lucide-react";
-
+import AlertDialog from "./alert-dialog"
 const AddStudentForm = ({ initialData, onSubmit, onClose }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imagePreview, setImagePreview] = useState(initialData?.image || null);
   const [imageFile, setImageFile] = useState(null);
   const [dragActive, setDragActive] = useState(false);
+  const [showUpdateWarning, setShowUpdateWarning] = useState(false);
+  const [formData, setFormData] = useState(null);
+
 
   useEffect(() => {
     if (initialData?.image) {
@@ -52,19 +55,28 @@ const AddStudentForm = ({ initialData, onSubmit, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const data = {
+      name: e.target.name.value,
+      description: e.target.description.value,
+      image: imagePreview,
+      facebook: e.target.facebook.value,
+      linkedin: e.target.linkedin.value,
+      github: e.target.github.value,
+      email: e.target.email.value,
+      whatsapp: e.target.whatsapp.value,
+    };
+
+    if (initialData) {
+      setFormData(data);
+      setShowUpdateWarning(true);
+    } else {
+      submitForm(data);
+    }
+  };
+  const submitForm = async (data) => {
     setIsSubmitting(true);
     try {
-      const formData = {
-        name: e.target.name.value,
-        description: e.target.description.value,
-        image: imagePreview,
-        facebook: e.target.facebook.value,
-        linkedin: e.target.linkedin.value,
-        github: e.target.github.value,
-        email: e.target.email.value,
-        whatsapp: e.target.whatsapp.value,
-      };
-      await onSubmit(formData);
+      await onSubmit(data);
       onClose();
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -75,6 +87,15 @@ const AddStudentForm = ({ initialData, onSubmit, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-gray-100 overflow-y-auto">
+      <AlertDialog
+        isOpen={showUpdateWarning}
+        onClose={() => setShowUpdateWarning(false)}
+        onConfirm={() => submitForm(formData)}
+        title="Update Student Information"
+        description="Are you sure you want to update this student's information? This action can be undone later."
+        confirmText="Update"
+        confirmStyle="bg-blue-500 hover:bg-blue-600"
+      />
       <div className="absolute right-4 top-4">
         <button
           onClick={onClose}
@@ -205,7 +226,6 @@ const AddStudentForm = ({ initialData, onSubmit, onClose }) => {
             </div>
           </div>
 
-          {/* Footer - Submit Button */}
           <div className="mt-8 pt-8 border-t border-gray-200">
             <div className="flex justify-end space-x-4">
               <button
