@@ -213,7 +213,7 @@ const AddStudentForm = ({ initialData, onSubmit, onClose }) => {
               ].map((platform) => (
                 <div key={platform}>
                   <label className="block text-sm font-medium text-gray-700">
-                    {platform.charAt(0).toUpperCase() + platform.slice(1)} Link
+                    {platform.charAt(0).toUpperCase() + platform.slice(1)}
                   </label>
                   <input
                     type="text"
