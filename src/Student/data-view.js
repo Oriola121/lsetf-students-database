@@ -131,7 +131,6 @@ export default function DataView() {
               </button>
             </div>
 
-            {/* Rest of the student card content remains the same */}
             <div className="flex justify-center pt-6">
               <img src={props.image} alt={props.name} className="w-36 h-36 rounded-full border-4 border-white" />
             </div>
